@@ -53,7 +53,7 @@ At this point, the data is:
 
 ### Merging Dataset
 This code merges the data together and gets rid of the trimmings. It also names the columns so as to avoid having to deal with messy data frames. I chose to name both joining keys "activityId" in order to make joining easier later on.
-'''{r}
+```{r eval=FALSE}
 # Merge Datasets
 train = cbind(train_1, train_2, train_3)
 test = cbind(test_1, test_2, test_3)
@@ -66,7 +66,7 @@ rm(test_1, test_2, test_3)
 # Name Datasets 
 colnames(t_data) = c(features[,2], 'activityId', 'subjectId')
 colnames(activity_labels) = c('activityId','activityType');
-'''
+```
 
 At this point:
 - the data is merged together to form a numerical dataset and a label set
