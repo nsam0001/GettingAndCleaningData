@@ -115,7 +115,7 @@ by_grp = group_by(t_data_tbl, subjectId, activityType, variable)
 t_data_summary = summarise(by_grp, Variable_Rows_In_Mean = n(), Variable_Mean = mean(value))
 
 # Saving the new dataset
-write.table(t_data_summary, "t_data_summary.csv", row.names = FALSE, quote = FALSE, sep=',')
+write.table(t_data_summary, "t_data_summary.txt", row.names = FALSE, quote = FALSE) #, sep=',')
 
 ##########################################################################
 # Rough Work (old code that I decided to store here)
