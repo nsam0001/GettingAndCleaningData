@@ -12,7 +12,7 @@ The following code will ensure that the three key packages are installed and dep
 - reshape2 was used to melt the data (R's native "aggregate" could have also done the job)
 - data.table was used for merging and melting
 - dplyr was used to summarise the data and calculate the mean (R's native "aggregate" could have also done the job) 
-'''{r}
+```{r eval=FALSE}
 if (!require("reshape2")) { install.packages("reshape2") }
 if (!require("data.table")) { install.packages("data.table") }
 if (!require("dplyr")) { install.packages("dplyr") }
@@ -20,18 +20,18 @@ if (!require("dplyr")) { install.packages("dplyr") }
 library("data.table")
 library("reshape2")
 library("dplyr")
-'''
+```
 
 ### Raw Data Collection
 This code downloads the .zip file and unzips it to the current working directory. The output of this block is a folder called "UCI HAR Dataset" containing the raw data.
-'''{r}
+```{r eval=FALSE}
 download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", "AccData.zip")
 unzip("AccData.zip")
-'''
+```
 
 ### Read Data
 This block reads the training and testing data files (six in total) as well as the labels and column names. I'm assuming that the subject and activity label are part of the dataset.
-'''{r}
+```{r eval=FALSE}
 # Read Training Data
 train_1 = read.table(paste0(getwd(), "/UCI HAR Dataset/train/X_train.txt"))
 train_2 = read.table(paste0(getwd(), "/UCI HAR Dataset/train/y_train.txt"))
@@ -45,7 +45,7 @@ test_3 = read.table(paste0(getwd(), "/UCI HAR Dataset/test/subject_test.txt"))
 # Read Ancillary Data
 features = read.table(paste0(getwd(), "/UCI HAR Dataset/features.txt"), stringsAsFactors = FALSE)
 activity_labels = read.table(paste0(getwd(), "/UCI HAR Dataset/activity_labels.txt"), stringsAsFactors = FALSE)
-'''
+```
 
 At this point, the data is:
 - split across different files
@@ -75,22 +75,22 @@ At this point:
 ### Extracting Mean and Standard Deviation Measures
 This code using regular expressions to find all column names containing Mean or STD. In order to ease my search, I extracted the data frame's names into a separate vector and searched that. I used the results from *grep* to filter the data frame.
 
-'''
+```{r eval=FALSE}
 # Find the mean() and std() columns
 t_data_cols = colnames(t_data)
 t_data_features = c(grep("mean",tolower(t_data_cols)), grep("-std()",tolower(t_data_cols)))
 
 # Extract Means and STDs (haha)
 t_data_cols_filtered = t_data[, t_data_features]
-'''
+```
 
 ### Merging Descriptive Activity Names
 I took this to mean joining in the activity names into the dataset. Which is what I did below. I named both joining keys activityId in order to ease joining.
 
-'''
+```{r eval=FALSE}
 # Descriptive activity names in data set
 t_data_labelled = merge(t_data, activity_labels, by.x = "activityId", by.y = "activityId")
-'''
+```
 
 At this point:
 - the data is merged together to form one large dataset
@@ -98,7 +98,7 @@ At this point:
 ### Labelling Data Appropriately
 I took this to mean renaming the columns. I wasn't sure what to do, so I just improvised with a lot of chained *gsub* calls.
 
-'''
+```{r eval=FALSE}
 # Descriptive variable names
 t_data_cols = colnames(t_data_labelled)
 t_data_cols =
@@ -118,7 +118,7 @@ t_data_cols =
 
 # Relabel Dataset
 colnames(t_data_labelled) = t_data_cols
-'''
+```
 
 At this point:
 - the data structure remains unchanged
@@ -127,7 +127,7 @@ At this point:
 ### Creating an Independent Tidy Dataset
 In order to conform to the bible of tidiness, I elected to store each variable in a separate line. There are two trains of thought here - the one I chose and storing the data in a multi-variate time series format. I was short on time and melting the dataset seemed like the obvious thing to do.
 *Melt* will "fold" the variables, or more technically, unpivot the dataset. *Summarise* will find the mean values of each variable (grouped by subject and activity) and count the number of rows used to compute each average.
-'''
+```{r eval=FALSE}
 # Forming a new dataset
 # http://www.onthelambda.com/2014/02/10/how-dplyr-replaced-my-most-common-r-idioms/
 
@@ -142,7 +142,7 @@ t_data_summary = summarise(by_grp, Variable_Rows_In_Mean = n(), Variable_Mean = 
 
 # Saving the new dataset
 write.table(t_data_summary, "t_data_summary.csv", row.names = FALSE, quote = FALSE, sep=',')
-'''
+```
 
 At this point:
 - the dataset was unpivoted to form a simpler dataset
