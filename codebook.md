@@ -12,7 +12,7 @@ The following code will ensure that the three key packages are installed and dep
 - reshape2 was used to melt the data (R's native "aggregate" could have also done the job)
 - data.table was used for merging and melting
 - dplyr was used to summarise the data and calculate the mean (R's native "aggregate" could have also done the job) 
-'''
+'''{r}
 if (!require("reshape2")) { install.packages("reshape2") }
 if (!require("data.table")) { install.packages("data.table") }
 if (!require("dplyr")) { install.packages("dplyr") }
@@ -24,14 +24,14 @@ library("dplyr")
 
 ### Raw Data Collection
 This code downloads the .zip file and unzips it to the current working directory. The output of this block is a folder called "UCI HAR Dataset" containing the raw data.
-''' 
+'''{r}
 download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", "AccData.zip")
 unzip("AccData.zip")
 '''
 
 ### Read Data
 This block reads the training and testing data files (six in total) as well as the labels and column names. I'm assuming that the subject and activity label are part of the dataset.
-'''
+'''{r}
 # Read Training Data
 train_1 = read.table(paste0(getwd(), "/UCI HAR Dataset/train/X_train.txt"))
 train_2 = read.table(paste0(getwd(), "/UCI HAR Dataset/train/y_train.txt"))
@@ -53,7 +53,7 @@ At this point, the data is:
 
 ### Merging Dataset
 This code merges the data together and gets rid of the trimmings. It also names the columns so as to avoid having to deal with messy data frames. I chose to name both joining keys "activityId" in order to make joining easier later on.
-'''
+'''{r}
 # Merge Datasets
 train = cbind(train_1, train_2, train_3)
 test = cbind(test_1, test_2, test_3)
